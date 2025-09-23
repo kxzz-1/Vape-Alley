@@ -1,9 +1,8 @@
-// src/App.jsx
-
 import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import Cart from './components/Cart';
-import Home from './pages/Home'; // 1. Import the new Home component
+import Home from './pages/Home';
+import Footer from './components/Footer';
 
 // Sample data for demonstration
 const sampleCartItems = [
@@ -31,15 +30,22 @@ function App() {
   const closeCart = () => setIsCartOpen(false);
 
   return (
-    <div>
+    // The main container for your app's layout
+    <div className="app-container flex flex-col min-h-screen">
+      {/* This new div is ONLY for the background. It won't affect the layout. */}
+      <div className="background-gradient-container" />
+
       <Navbar onCartClick={openCart} />
-      {/* This pt-24 class is crucial */}
-      <main className="p-8 pt-24">
+      <Cart isOpen={isCartOpen} onClose={closeCart} cartItems={cartItems} />
+
+      <main className="p-8 pt-24 flex-grow">
         <Home />
       </main>
+      
+      <Footer />
     </div>
   );
 }
 
-
 export default App;
+

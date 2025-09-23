@@ -1,48 +1,88 @@
-// src/components/Navbar.jsx
 import React, { useState } from 'react';
-import { ShoppingCartIcon } from '@heroicons/react/24/outline';
+import { ShoppingCartIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+
+const productCategories = [
+  { name: 'Vapes', href: '#' },
+  { name: 'Pods', href: '#' },
+  { name: 'E-Liquids', href: '#' },
+  { name: 'Disposables', href: '#' },
+  { name: 'Coil & Tanks', href: '#' },
+];
 
 const Navbar = ({ onCartClick }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   return (
     <header>
       <nav className="navbar">
-        <a href="/" className="flex items-center gap-x-2">
-          <img src="/logo.png" alt="Vape Alley Logo" className="h-10 w-10" />
-          <span className="brand-name">
-            Vape Alley
-          </span>
-        </a>
-
-        {/* ... (Hamburger menu remains the same) ... */}
-        <div className="hamburger" onClick={toggleMenu}>
-          <span className="bar"></span>
-          <span className="bar"></span>
-          <span className="bar"></span>
+        {/* Left Section: Logo and Brand Name */}
+        <div className="flex-1">
+          <a href="/" className="flex items-center gap-x-2">
+            <img src="/logo.png" alt="Vape Alley Logo" className="h-10 w-10" />
+            <span className="brand-name">Vape Alley</span>
+          </a>
         </div>
 
-        {/* The ml-auto class pushes this entire block to the right */}
-        <ul className={`nav-links ml-auto ${isOpen ? 'active' : ''}`}>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#products">Products</a></li>
-          <li><a href="#about">About Us</a></li>
-          <li>
-            <button
-              type="button"
-              onClick={onCartClick}
-              aria-label="Open Shopping Cart"
-              className="hover:text-neon-purple transition-colors"
+        {/* Center Section: Navigation Links (hidden on mobile) */}
+        <div className="hidden md:flex flex-1 justify-center">
+          <ul className="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li
+              className="relative"
+              onMouseEnter={() => setIsDropdownOpen(true)}
+              onMouseLeave={() => setIsDropdownOpen(false)}
             >
-              <ShoppingCartIcon className="h-6 w-6" />
+              <a href="#products" className="flex items-center gap-x-1">
+                Products
+              </a>
+              {isDropdownOpen && (
+                <div className="dropdown-menu">
+                  {productCategories.map((item) => (
+                    <a key={item.name} href={item.href} className="dropdown-item">
+                      {item.name}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </li>
+            <li><a href="#about">About Us</a></li>
+          </ul>
+        </div>
+
+        {/* Right Section: Icons (hidden on mobile) */}
+        <div className="hidden md:flex flex-1 justify-end items-center gap-x-6">
+          <button type="button" aria-label="Search" className="icon-button">
+            <MagnifyingGlassIcon className="h-6 w-6" />
+          </button>
+          <button type="button" onClick={onCartClick} aria-label="Open Shopping Cart" className="icon-button">
+            <ShoppingCartIcon className="h-6 w-6" />
+          </button>
+        </div>
+        
+        {/* Mobile Hamburger Menu (Corrected) */}
+        <div className="md:hidden flex-1 flex justify-end">
+            <button onClick={toggleMobileMenu} className="hamburger">
+                <span className="bar"></span>
+                <span className="bar"></span>
+                <span className="bar"></span>
             </button>
-          </li>
-        </ul>
+        </div>
       </nav>
+
+      {/* Mobile Menu Dropdown */}
+      {isMobileMenuOpen && (
+        <div className="mobile-menu">
+            <a href="#home">Home</a>
+            <a href="#products">Products</a>
+            <a href="#about">About Us</a>
+            {/* You can add mobile-specific search and cart buttons here if you wish */}
+        </div>
+      )}
     </header>
   );
 };

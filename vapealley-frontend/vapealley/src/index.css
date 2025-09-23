@@ -1,77 +1,183 @@
-/* src/index.css */
-
-/* ... keep the @tailwind directives at the top ... */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* --- Body and Background Styles --- */
 body {
-  /* Set the base theme and prepare for positioning the gradient */
-  @apply bg-background text-gray-200 relative overflow-x-hidden;
+  /* The body now only needs a base background color */
+  @apply bg-background;
 }
 
-/* This pseudo-element creates the blurred gradient effect */
-body::before {
+.app-container {
+  @apply text-gray-200;
+}
+
+/* This new container is fixed to the viewport and sits behind everything */
+.background-gradient-container {
+  @apply fixed inset-0 -z-10 overflow-hidden;
+}
+
+/* The animated gradient is now attached to this dedicated container */
+.background-gradient-container::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1; /* Places the gradient behind your page content */
+  top: -25%;
+  left: -25%;
+  right: -25%;
+  bottom: -25%;
+  z-index: -1;
 
-  /* Creates a purple circle at the top right that fades out */
   background: radial-gradient(
-    circle at 20% 25%, 
-    theme('colors.primary'), /* Uses your custom purple color */
-    transparent 35% /* Controls the size of the color circle */
+    circle at 25% 20%, 
+    theme('colors.neon-purple') 0%,
+    transparent 40%
+  ),
+  radial-gradient(
+    circle at 75% 80%,
+    theme('colors.primary') 0%,
+    transparent 50%
   );
 
-  /* This is the key part that creates the blurred, translucent look */
-  filter: blur(120px);
+  filter: blur(150px);
+  animation: blob-glow 12s infinite alternate;
 }
 
-/* ... keep your other custom classes (.navbar, .brand-name, etc.) below ... */
+/* --- Custom Scrollbar Styles --- */
+::-webkit-scrollbar {
+  @apply w-2;
+}
 
-/* Custom Component Classes using @apply */
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary rounded-full border-2 border-transparent bg-clip-content;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-accent;
+}
+
+
+/* --- Navbar Section --- */
 .navbar {
-  /* All layout and positioning is handled here by Tailwind */
-  @apply flex items-center px-10 py-4 shadow-lg fixed top-0 left-0 right-0 z-50;
+  /* This uses justify-between to space out the left, center, and right sections */
+  @apply flex items-center justify-between px-4 md:px-10 py-4 shadow-lg fixed top-0 left-0 right-0 z-50;
 
-  /* Custom styles for the translucent "frosted glass" effect */
-  background-color: rgba(200, 0, 200, 0.4);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  /* Frosted glass effect */
+  background-color: rgba(0, 0, 0, 0.4);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   box-shadow: 0 0 10px rgba(200, 0, 200, 0.4), 0 0 20px rgba(200, 0, 200, 0.3);
 }
 
+/* Left side of Navbar */
 .brand-name {
-    @apply text-2xl font-extrabold tracking-wider text-accent;
-    margin-left: 40px;
-    text-shadow: 0 0 10px rgba(200, 0, 200, 0.4), 0 0 20px rgba(200, 0, 200, 0.3);
+  @apply text-xl md:text-2xl font-extrabold tracking-wider text-white drop-shadow-lg;
+  animation: text-glow 2s infinite alternate;
 }
 
+/* Center of Navbar */
 .nav-links {
-    /* Hide on mobile by default, show on medium screens and up */
-    @apply hidden md:flex items-center space-x-8 text-accent;
-    margin-right: 40px;
-    text-shadow: 0 0 10px rgba(200, 0, 200, 0.4), 0 0 20px rgba(200, 0, 200, 0.3);
-}
-
-.nav-links.active {
-    /* Styles for the mobile menu when it's open */
-    @apply absolute top-16 left-0 bg-background w-full flex flex-col items-center space-y-5 py-5 z-10;
+  @apply flex items-center space-x-2 text-accent bg-black/30 px-4 py-2 rounded-full;
 }
 
 .nav-links a {
-    @apply text-gray-300 hover:text-accent transition-colors duration-300;
+  @apply transition-colors duration-300 px-3 py-1 rounded-full hover:bg-primary hover:text-white;
 }
 
+.nav-link-active {
+  @apply bg-primary text-white;
+}
+
+/* Products Dropdown Menu */
+.dropdown-menu {
+  @apply absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none flex flex-col py-1;
+  background-color: rgba(0, 0, 0, 0.8);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.dropdown-item {
+  @apply block px-4 py-2 text-sm text-gray-300 hover:bg-primary hover:text-white rounded-md mx-1;
+}
+
+/* Right side of Navbar */
+.icon-button {
+  @apply text-accent bg-black/30 px-2 py-2 rounded-full hover:bg-primary hover:text-white transition-colors;
+}
+
+/* Mobile Hamburger Icon */
 .hamburger {
-    /* Show only on mobile screens */
-    @apply md:hidden flex flex-col space-y-1.5 cursor-pointer;
+    @apply flex flex-col space-y-1.5 cursor-pointer p-2;
 }
 
 .bar {
-    @apply h-0.5 w-6 bg-gray-300 rounded-full;
+    @apply h-0.5 w-6 bg-accent rounded-full;
 }
+
+/* Mobile Menu Container */
+.mobile-menu {
+    @apply md:hidden bg-primary flex flex-col items-center space-y-4 py-4 fixed top-[72px] left-0 right-0 z-40; 
+    background-color: rgba(169, 0, 169, 0.9);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+
+.mobile-menu a {
+    @apply text-accent text-lg hover:text-white;
+}
+
+/* --- Sale Banner Section --- */
+.sale-banner {
+  @apply my-12;
+}
+
+.sale-banner img {
+  @apply w-full rounded-lg shadow-lg shadow-primary/30;
+}
+
+/* --- Responsive Content Padding --- */
+.content-padding {
+  @apply p-4 md:p-8;
+}
+
+
+/* --- Footer Section --- */
+.footer {
+  @apply bg-background border-t border-primary/30 mt-16;
+}
+
+.footer-container {
+    @apply mx-auto max-w-7xl px-4 md:px-8 py-12;
+}
+
+.footer-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center md:text-left;
+}
+
+.footer-heading {
+  @apply text-lg font-semibold text-accent mb-4;
+}
+
+.footer-links {
+  @apply flex flex-col space-y-3;
+}
+
+.footer-link {
+  @apply text-gray-400 hover:text-white transition-colors;
+}
+
+.footer-socials {
+  @apply flex space-x-4 mt-4 justify-center md:justify-start;
+}
+
+.social-icon {
+    @apply text-gray-400 hover:text-accent transition-colors;
+}
+
+.footer-copyright {
+  @apply mt-12 pt-8 border-t border-primary/20 text-center text-gray-500 text-sm;
+}
+
