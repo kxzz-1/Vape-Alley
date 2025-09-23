@@ -1,0 +1,77 @@
+/* src/index.css */
+
+/* ... keep the @tailwind directives at the top ... */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  /* Set the base theme and prepare for positioning the gradient */
+  @apply bg-background text-gray-200 relative overflow-x-hidden;
+}
+
+/* This pseudo-element creates the blurred gradient effect */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1; /* Places the gradient behind your page content */
+
+  /* Creates a purple circle at the top right that fades out */
+  background: radial-gradient(
+    circle at 20% 25%, 
+    theme('colors.primary'), /* Uses your custom purple color */
+    transparent 35% /* Controls the size of the color circle */
+  );
+
+  /* This is the key part that creates the blurred, translucent look */
+  filter: blur(120px);
+}
+
+/* ... keep your other custom classes (.navbar, .brand-name, etc.) below ... */
+
+/* Custom Component Classes using @apply */
+.navbar {
+  /* All layout and positioning is handled here by Tailwind */
+  @apply flex items-center px-10 py-4 shadow-lg fixed top-0 left-0 right-0 z-50;
+
+  /* Custom styles for the translucent "frosted glass" effect */
+  background-color: rgba(200, 0, 200, 0.4);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 10px rgba(200, 0, 200, 0.4), 0 0 20px rgba(200, 0, 200, 0.3);
+}
+
+.brand-name {
+    @apply text-2xl font-extrabold tracking-wider text-accent;
+    margin-left: 40px;
+    text-shadow: 0 0 10px rgba(200, 0, 200, 0.4), 0 0 20px rgba(200, 0, 200, 0.3);
+}
+
+.nav-links {
+    /* Hide on mobile by default, show on medium screens and up */
+    @apply hidden md:flex items-center space-x-8 text-accent;
+    margin-right: 40px;
+    text-shadow: 0 0 10px rgba(200, 0, 200, 0.4), 0 0 20px rgba(200, 0, 200, 0.3);
+}
+
+.nav-links.active {
+    /* Styles for the mobile menu when it's open */
+    @apply absolute top-16 left-0 bg-background w-full flex flex-col items-center space-y-5 py-5 z-10;
+}
+
+.nav-links a {
+    @apply text-gray-300 hover:text-accent transition-colors duration-300;
+}
+
+.hamburger {
+    /* Show only on mobile screens */
+    @apply md:hidden flex flex-col space-y-1.5 cursor-pointer;
+}
+
+.bar {
+    @apply h-0.5 w-6 bg-gray-300 rounded-full;
+}
