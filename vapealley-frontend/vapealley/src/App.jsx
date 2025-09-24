@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Cart from './components/Cart';
 import Home from './pages/Home';
 import Footer from './components/Footer';
+import WhatsAppButton from './components/WhatsAppButton';
 
 // Sample data for demonstration
 const sampleCartItems = [
@@ -38,14 +39,15 @@ function App() {
       <Navbar onCartClick={openCart} />
       <Cart isOpen={isCartOpen} onClose={closeCart} cartItems={cartItems} />
 
-      <main className="p-8 pt-24 flex-grow">
+      <main className="pt-24 w-full flex-grow">
         <Home />
       </main>
       
       <Footer />
+
+      <WhatsAppButton />
     </div>
   );
 }
 
 export default App;
-

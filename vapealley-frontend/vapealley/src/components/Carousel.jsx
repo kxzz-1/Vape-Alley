@@ -28,8 +28,8 @@ const Carousel = ({ slides, autoplayInterval = 5000 }) => {
   }, [currentIndex, autoplayInterval, goToNext]);
 
   return (
-    // The height is now responsive: 300px on mobile, 500px on medium screens and up
-    <div className="relative h-[300px] md:h-[500px] w-full rounded-lg overflow-hidden shadow-2xl">
+    // Full-width on mobile, larger height, and no rounded corners
+    <div className="relative h-[400px] w-full md:h-[600px] w-full overflow-hidden shadow-2xl md:rounded-lg">
       <div
         className="flex h-full transition-transform ease-in-out duration-700"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}

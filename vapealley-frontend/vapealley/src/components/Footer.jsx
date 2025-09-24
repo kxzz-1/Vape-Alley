@@ -41,6 +41,15 @@ const Footer = () => {
             </ul>
           </div>
 
+          {/* Column 3: Customer Service */}
+          <div>
+            <h3 className="footer-heading">Customer Service</h3>
+            <ul className="footer-links">
+              <li><a href="#" className="footer-link">My Account</a></li>
+              <li><a href="#" className="footer-link">Order History</a></li>
+              <li><a href="#" className="footer-link">Track Order</a></li>
+            </ul>
+          </div>
           {/* Column 3: Categories */}
           <div>
             <h3 className="footer-heading">Categories</h3>

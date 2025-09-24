@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    /* This enables smooth scrolling for all anchor links and scroll events */
+    @apply scroll-smooth;
+  }
+}
+
 /* --- Body and Background Styles --- */
 body {
   /* The body now only needs a base background color */
@@ -28,7 +35,7 @@ body {
   z-index: -1;
 
   background: radial-gradient(
-    circle at 25% 20%, 
+    circle at 25% 20%,
     theme('colors.neon-purple') 0%,
     transparent 40%
   ),
@@ -80,32 +87,110 @@ body {
 
 /* Center of Navbar */
 .nav-links {
-  @apply flex items-center space-x-2 text-accent bg-black/30 px-4 py-2 rounded-full;
+  /* Added background, padding, and rounded-full for the container effect */
+  @apply hidden md:flex items-center space-x-2 text-accent bg-black/30 px-4 py-2 rounded-full;
+  box-shadow: 0 0 10px rgba(200, 0, 200, 0.4), 0 0 20px rgba(200, 0, 200, 0.3);
 }
 
 .nav-links a {
+  /* The hover state now applies a solid primary color background, creating the circle/pill effect */
   @apply transition-colors duration-300 px-3 py-1 rounded-full hover:bg-primary hover:text-white;
 }
 
+/* Add this class to a link (via JS) to mark it as the currently active page */
 .nav-link-active {
   @apply bg-primary text-white;
 }
 
-/* Products Dropdown Menu */
-.dropdown-menu {
-  @apply absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none flex flex-col py-1;
-  background-color: rgba(0, 0, 0, 0.8);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+/* --- Product Section --- */
+.products-section-container {
+  @apply w-full mt-16;
 }
 
-.dropdown-item {
-  @apply block px-4 py-2 text-sm text-gray-300 hover:bg-primary hover:text-white rounded-md mx-1;
+.products-section-title {
+  @apply text-3xl font-bold text-accent mb-8 text-center;
 }
+
+.products-section-banner {
+  @apply mb-8 rounded-lg overflow-hidden shadow-lg;
+}
+
+.products-section-tabs {
+  @apply flex justify-center mb-8 space-x-2 md:space-x-4;
+}
+
+.product-tab {
+  @apply px-4 py-2 text-sm md:text-base font-semibold rounded-full transition-colors duration-300 bg-gray-800/50 text-accent hover:bg-primary/50;
+}
+
+.product-tab-active {
+  @apply bg-primary text-white;
+}
+
+/* Responsive Product Grid */
+.products-horizontal-scroll {
+  @apply overflow-x-auto pb-4 -mb-4;
+  /* Hide scrollbar for a cleaner look */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+.products-horizontal-scroll::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.products-section-grid-inner {
+  @apply flex space-x-4;
+}
+
+
+/* --- Mega Menu Dropdown Styles --- */
+.mega-menu-container {
+  /* This container creates the space for the menu to appear in, solving the hover gap issue */
+  @apply absolute top-full left-1/2 -translate-x-1/2 pt-4; /* pt-4 creates the visual gap */
+}
+
+.mega-menu {
+  @apply p-6 rounded-lg shadow-lg w-max;
+  /* Frosted glass effect */
+  background-color: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.mega-menu-content {
+  @apply flex gap-x-12; /* Space between the columns */
+}
+
+.mega-menu-section {
+  @apply flex gap-x-6; /* Space between image and links */
+}
+
+.mega-menu-image-container {
+  @apply w-32 h-40 rounded-md overflow-hidden;
+}
+
+.mega-menu-image {
+  @apply w-full h-full object-cover;
+}
+
+.mega-menu-heading {
+  @apply font-bold text-white text-lg mb-3;
+}
+
+.mega-menu-links {
+  @apply flex flex-col space-y-2;
+}
+
+.mega-menu-link {
+  @apply text-gray-300 hover:text-accent transition-colors;
+}
+
 
 /* Right side of Navbar */
 .icon-button {
   @apply text-accent bg-black/30 px-2 py-2 rounded-full hover:bg-primary hover:text-white transition-colors;
+  box-shadow: 0 0 10px rgba(200, 0, 200, 0.4), 0 0 20px rgba(200, 0, 200, 0.3);
 }
 
 /* Mobile Hamburger Icon */
@@ -119,7 +204,8 @@ body {
 
 /* Mobile Menu Container */
 .mobile-menu {
-    @apply md:hidden bg-primary flex flex-col items-center space-y-4 py-4 fixed top-[72px] left-0 right-0 z-40; 
+    /* Adjust top-[72px] to match your navbar's height if needed */
+    @apply md:hidden bg-primary flex flex-col items-center space-y-4 py-4 fixed top-[72px] left-0 right-0 z-40;
     background-color: rgba(169, 0, 169, 0.9);
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
@@ -146,7 +232,7 @@ body {
 
 /* --- Footer Section --- */
 .footer {
-  @apply bg-background border-t border-primary/30 mt-16;
+  @apply bg-black/70 border-t border-primary/30 mt-16;
 }
 
 .footer-container {
@@ -180,4 +266,3 @@ body {
 .footer-copyright {
   @apply mt-12 pt-8 border-t border-primary/20 text-center text-gray-500 text-sm;
 }
-
