@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // A simple component for social media icons. You can replace the SVGs with icons from a library if you prefer.
 const SocialIcon = ({ href, children }) => (
@@ -13,7 +14,7 @@ const Footer = () => {
       <div className="footer-container">
         <div className="footer-grid">
           {/* Column 1: About */}
-          <div className="space-y-4">
+          <div className="space-y-4 text-center md:text-left">
             <a href="/" className="flex items-center gap-x-2">
               <img src="/logo.png" alt="Vape Alley Logo" className="h-10 w-10" />
               <span className="brand-name">Vape Alley</span>
@@ -34,31 +35,21 @@ const Footer = () => {
           <div>
             <h3 className="footer-heading">Quick Links</h3>
             <ul className="footer-links">
-              <li><a href="#" className="footer-link">Home</a></li>
-              <li><a href="#" className="footer-link">Products</a></li>
-              <li><a href="#" className="footer-link">About Us</a></li>
-              <li><a href="#" className="footer-link">Contact</a></li>
+              <li><Link to="/" className="footer-link">Home</Link></li>
+              <li><Link to="/products/all" className="footer-link">Products</Link></li>
+              <li><Link to="/about" className="footer-link">About Us</Link></li>
+              <li><Link to="/contact" className="footer-link">Contact</Link></li>
             </ul>
           </div>
 
-          {/* Column 3: Customer Service */}
-          <div>
-            <h3 className="footer-heading">Customer Service</h3>
-            <ul className="footer-links">
-              <li><a href="#" className="footer-link">My Account</a></li>
-              <li><a href="#" className="footer-link">Order History</a></li>
-              <li><a href="#" className="footer-link">Track Order</a></li>
-            </ul>
-          </div>
           {/* Column 3: Categories */}
           <div>
             <h3 className="footer-heading">Categories</h3>
             <ul className="footer-links">
-              <li><a href="#" className="footer-link">Vapes</a></li>
-              <li><a href="#" className="footer-link">Pods</a></li>
-              <li><a href="#" className="footer-link">E-Liquids</a></li>
-              <li><a href="#" className="footer-link">Disposables</a></li>
-              <li><a href="#" className="footer-link">Coil & Tanks</a></li>
+              <li><Link to="/products/devices" className="footer-link">Vapes & Pods</Link></li>
+              <li><Link to="/products/e-juices" className="footer-link">E-Liquids</Link></li>
+              <li><Link to="/products/disposables" className="footer-link">Disposables</Link></li>
+              <li><Link to="/products/accessories" className="footer-link">Coils & Tanks</Link></li>
             </ul>
           </div>
 

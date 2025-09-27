@@ -1,10 +1,12 @@
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { Link } from 'react-router-dom';
 import { XMarkIcon, TrashIcon } from '@heroicons/react/24/outline';
 
-const Cart = ({ isOpen, onClose, cartItems = [] }) => {
+const Cart = ({ isOpen, onClose, cartItems = [], onRemove, onUpdateQuantity }) => {
   // Calculate the subtotal
   const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const formatPrice = (num) => `Rs ${num.toLocaleString()}`;
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -71,14 +73,15 @@ const Cart = ({ isOpen, onClose, cartItems = [] }) => {
                                   <div className="ml-4 flex flex-1 flex-col">
                                     <div>
                                       <div className="flex justify-between text-base font-medium text-gray-200">
-                                        <h3>{item.name}</h3>
-                                        <p className="ml-4">${(item.price * item.quantity).toFixed(2)}</p>
+                                        <h3><Link to={`/product/${item.id}`} onClick={onClose}>{item.name}</Link></h3>
+                                        <p className="ml-4">{formatPrice(item.price * item.quantity)}</p>
                                       </div>
                                     </div>
                                     <div className="flex flex-1 items-end justify-between text-sm">
                                       <p className="text-gray-400">Qty {item.quantity}</p>
                                       <div className="flex">
                                         <button
+                                          onClick={() => onRemove(item.id)}
                                           type="button"
                                           className="font-medium text-primary hover:text-primary-hover"
                                         >
@@ -102,18 +105,19 @@ const Cart = ({ isOpen, onClose, cartItems = [] }) => {
                       <div className="border-t border-gray-700 px-4 py-6 sm:px-6">
                         <div className="flex justify-between text-base font-medium text-gray-200">
                           <p>Subtotal</p>
-                          <p>${subtotal.toFixed(2)}</p>
+                          <p>{formatPrice(subtotal)}</p>
                         </div>
                         <p className="mt-0.5 text-sm text-gray-400">
                           Shipping and taxes calculated at checkout.
                         </p>
                         <div className="mt-6">
-                          <a
-                            href="#"
+                          <Link
+                            to="/checkout"
+                            onClick={onClose}
                             className="flex items-center justify-center rounded-md border border-transparent bg-primary px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-primary-hover"
                           >
                             Checkout
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     )}

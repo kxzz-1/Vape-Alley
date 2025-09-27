@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Cart from './components/Cart';
 import Home from './pages/Home';
+import ProductsPage from './pages/ProductsPage'; // Import the new page
+import CheckoutPage from './pages/CheckoutPage';
+import ProductDetailsPage from './pages/ProductDetailsPage';
 import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
 
@@ -25,28 +29,76 @@ const sampleCartItems = [
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartItems, setCartItems] = useState(sampleCartItems);
 
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
 
+  const removeFromCart = (productId) => {
+    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+  };
+
+  const updateCartQuantity = (productId, newQuantity) => {
+    if (newQuantity <= 0) {
+      removeFromCart(productId);
+    } else {
+      setCartItems(prevItems =>
+        prevItems.map(item =>
+          item.id === productId ? { ...item, quantity: newQuantity } : item
+        )
+      );
+    }
+  };
+
+  const addToCart = (productToAdd, quantity) => {
+    setCartItems(prevItems => {
+      const existingItem = prevItems.find(item => item.id === productToAdd.id);
+      if (existingItem) {
+        // Update quantity if item already exists
+        return prevItems.map(item =>
+          item.id === productToAdd.id ? { ...item, quantity: item.quantity + quantity } : item
+        );
+      }
+      // Add new item to cart
+      return [...prevItems, { ...productToAdd, quantity }];
+    });
+    // Automatically open the cart to show the user the item was added
+    openCart();
+  };
+
+  // A single flag to determine if any overlay is open
+  const isOverlayOpen = isCartOpen || isMobileMenuOpen;
+
   return (
-    // The main container for your app's layout
-    <div className="app-container flex flex-col min-h-screen">
-      {/* This new div is ONLY for the background. It won't affect the layout. */}
-      <div className="background-gradient-container" />
+    <Router>
+      <div className="app-container flex flex-col min-h-screen">
+        <div className="background-gradient-container" />
 
-      <Navbar onCartClick={openCart} />
-      <Cart isOpen={isCartOpen} onClose={closeCart} cartItems={cartItems} />
+        <Navbar onCartClick={openCart} isMobileMenuOpen={isMobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
+        <Cart
+          isOpen={isCartOpen}
+          onClose={closeCart}
+          cartItems={cartItems}
+          onRemove={removeFromCart}
+          onUpdateQuantity={updateCartQuantity}
+        />
 
-      <main className="pt-24 w-full flex-grow">
-        <Home />
-      </main>
-      
-      <Footer />
+        <main className="pt-[72px] w-full flex-grow">
+          <Routes>
+            <Route path="/" element={<Home addToCart={addToCart} />} />
+            <Route path="/products/:category" element={<ProductsPage addToCart={addToCart} />} />
+            <Route path="/product/:productId" element={<ProductDetailsPage addToCart={addToCart} />} />
+            <Route path="/checkout" element={<CheckoutPage cartItems={cartItems} onRemove={removeFromCart} />} />
+            <Route path="/products" element={<ProductsPage />} />
+          </Routes>
+        </main>
+        
+        <Footer />
 
-      <WhatsAppButton />
-    </div>
+        <WhatsAppButton isOverlayOpen={isOverlayOpen} />
+      </div>
+    </Router>
   );
 }
 

@@ -20,7 +20,7 @@ const LocationSection = () => {
             <BuildingStorefrontIcon className="h-7 w-7 mr-3 text-primary" />
             Vape Alley
           </h3>
-          <p className="text-gray-400 mb-1">Lahore, Punjab, Pakistan</p>
+          <p className="text-gray-400 mb-1">35D Commercial Market EME Society, Lahore</p>
           <p className="text-gray-400 flex items-center justify-center">
             <PhoneIcon className="h-4 w-4 mr-2" />
             +92 302 9356404
@@ -29,8 +29,8 @@ const LocationSection = () => {
         {/* Right Column: Map */}
         <div className="relative w-full h-96 rounded-lg overflow-hidden shadow-lg shadow-primary/30 border-2 border-primary/50">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3402.041764955749!2d74.24966117559416!3d31.51594737422678!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391905d81aa3303d%3A0x33d4f150a66a155!2sVape%20Store%20in%20Lahore%20-%20Vape%20Alley!5e0!3m2!1sen!2s!4v1716480940561!5m2!1sen!2s"
-            className="absolute top-0 left-0 w-full h-full"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2313.2991184427256!2d74.21324632274622!3d31.436014518575313!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3918ffbea8fa47a3%3A0x90356afadad8c3e9!2sVape%20Alley!5e0!3m2!1sen!2s!4v1758774779116!5m2!1sen!2s"
+            className="absolute top-0 left-0 w-full h-full filter grayscale invert-[90%] hue-rotate-[180deg]"
             style={{ border: 0 }}
             allowFullScreen=""
             loading="lazy"

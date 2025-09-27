@@ -1,10 +1,10 @@
 import React from 'react';
 import Carousel from '../components/Carousel';
-import Categories from '../components/Categories';
 import ProductsSection from '../components/ProductSection'; // Import the new component
 import LocationSection from '../components/LocationSection';
 import InfoSection from '../components/InfoSection';
 import BrandPraises from '../components/BrandPraises';
+import BrandsSection from '../components/BrandsSection';  
 
 const slides = [
   {
@@ -24,16 +24,15 @@ const slides = [
   },
 ];
 
-const Home = () => {
+const Home = ({ addToCart }) => {
   return (
     <>
-      {/* This container is now slightly wider than the content below on large screens */}
-      <div className="w-full md:px-6 lg:px-8">
-        <Carousel slides={slides} />
-      </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Categories />
-        <ProductsSection />
+      {/* Carousel is now full-width by default */}
+      <Carousel slides={slides} />
+      {/* All subsequent sections are wrapped in a single container for consistent padding */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <BrandsSection />
+        <ProductsSection addToCart={addToCart} />
         <LocationSection />
         <InfoSection />
         <BrandPraises />

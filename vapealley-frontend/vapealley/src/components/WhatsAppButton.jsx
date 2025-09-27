@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { XMarkIcon, PaperAirplaneIcon } from '@heroicons/react/24/solid';
 
-const WhatsAppButton = () => {
+const WhatsAppButton = ({ isOverlayOpen }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -25,7 +25,9 @@ const WhatsAppButton = () => {
     <>
       {/* Chat Popup Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-50 w-80 rounded-lg bg-gray-900/80 backdrop-blur-md shadow-2xl shadow-primary/30 border border-primary/50 transition-all duration-300 ease-out">
+        <div className={`fixed bottom-24 right-6 w-80 rounded-lg bg-gray-900/80 backdrop-blur-md shadow-2xl shadow-primary/30 border border-primary/50 transition-all duration-300 ease-out ${
+          isOverlayOpen ? 'z-40' : 'z-50'
+        }`}>
           {/* Header */}
           <div className="flex items-center justify-between p-3 bg-primary rounded-t-lg">
             <h3 className="font-bold text-white">Chat with Vape Alley</h3>
@@ -60,7 +62,9 @@ const WhatsAppButton = () => {
       {/* Floating Action Button */}
       <button
         onClick={toggleChat}
-        className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 bg-primary rounded-full shadow-lg hover:bg-primary-hover transition-all duration-300 transform hover:scale-110"
+        className={`fixed bottom-6 right-6 flex items-center justify-center w-16 h-16 bg-primary rounded-full shadow-lg hover:bg-primary-hover transition-all duration-300 transform hover:scale-110 ${
+          isOverlayOpen ? 'z-40' : 'z-50'
+        }`}
         aria-label="Contact us on WhatsApp"
       >
         {/* WhatsApp Icon SVG */}

@@ -116,33 +116,61 @@ body {
 }
 
 .products-section-tabs {
-  @apply flex justify-center mb-8 space-x-2 md:space-x-4;
+  /* Tabs are now inside the container, scrollable on mobile */
+  @apply flex justify-start md:justify-center space-x-4 md:space-x-8 overflow-x-auto pb-4;
+  /* Hide scrollbar for a cleaner look */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE */
+}
+.products-section-tabs::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
 
 .product-tab {
-  @apply px-4 py-2 text-sm md:text-base font-semibold rounded-full transition-colors duration-300 bg-gray-800/50 text-accent hover:bg-primary/50;
+  @apply flex-shrink-0 px-4 py-2 text-sm md:text-base font-semibold rounded-full transition-all duration-300 bg-gray-800/50 text-accent hover:bg-primary/50;
 }
 
 .product-tab-active {
   @apply bg-primary text-white;
 }
 
-/* Responsive Product Grid */
+/* Unified container for tabs, arrow, and products */
+.product-display-container {
+  @apply relative bg-gray-900/50 rounded-xl shadow-lg p-4 sm:p-6;
+}
+
+/* The pointer arrow */
+.product-display-arrow {
+  @apply absolute top-[48px] w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-b-[15px] border-b-primary;
+  /* Smooth transition for the left property */
+  transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Center the arrow on its left position */
+  transform: translateX(-50%);
+}
+
+/* Horizontal Scrolling Grid */
 .products-horizontal-scroll {
-  @apply overflow-x-auto pb-4 -mb-4;
+  /* Centered the cards and balanced the padding */
+  @apply flex justify-center overflow-x-auto pt-8 gap-6 px-4 sm:px-6 transition-opacity duration-200;
   /* Hide scrollbar for a cleaner look */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  /* Enable snapping for a carousel-like feel */
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth; /* Ensures smooth programmatic scrolling */
 }
 
 .products-horizontal-scroll::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
 
-.products-section-grid-inner {
-  @apply flex space-x-4;
+/* New outer container to constrain width on large screens */
+.product-scroller-outer {
+  /* On large screens (lg), center the container */
+  @apply lg:mx-auto;
+  /* Set a custom max-width to perfectly fit 4 cards (18rem each) and 3 gaps (1.5rem each) */
+  max-width: 76.5rem; /* 4 * 18rem (w-72) + 3 * 1.5rem (gap-6) = 76.5rem */
 }
-
 
 /* --- Mega Menu Dropdown Styles --- */
 .mega-menu-container {
@@ -193,28 +221,51 @@ body {
   box-shadow: 0 0 10px rgba(200, 0, 200, 0.4), 0 0 20px rgba(200, 0, 200, 0.3);
 }
 
-/* Mobile Hamburger Icon */
-.hamburger {
-    @apply flex flex-col space-y-1.5 cursor-pointer p-2;
+.bar {
+    @apply h-0.5 w-6 bg-accent rounded-full transition-all duration-300;
 }
 
+/* --- Animated Hamburger Menu --- */
+.hamburger-menu {
+  @apply icon-button flex flex-col justify-center items-center space-y-1.5 p-2;
+}
+
+.hamburger-menu.open .bar1 {
+  transform: rotate(45deg) translate(5px, 6px);
+}
+
+.hamburger-menu.open .bar2 {
+  opacity: 0;
+}
+
+.hamburger-menu.open .bar3 {
+  transform: rotate(-45deg) translate(5px, -6px);
+}
+
+/* --- Full-Screen Mobile Menu (Old styles to be removed) --- */
+/* The new implementation uses Headless UI Dialog and does not need these custom classes */
+/*
 .bar {
     @apply h-0.5 w-6 bg-accent rounded-full;
 }
 
-/* Mobile Menu Container */
-.mobile-menu {
-    /* Adjust top-[72px] to match your navbar's height if needed */
-    @apply md:hidden bg-primary flex flex-col items-center space-y-4 py-4 fixed top-[72px] left-0 right-0 z-40;
-    background-color: rgba(169, 0, 169, 0.9);
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
+.mobile-menu-overlay {
+  @apply md:hidden fixed inset-0 z-50 flex flex-col;
+  background-color: rgba(10, 10, 20, 0.8); 
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
-.mobile-menu a {
-    @apply text-accent text-lg hover:text-white;
+.mobile-menu-header {
+  @apply flex items-center justify-between p-4 border-b border-primary/30;
+  height: 72px; 
 }
 
+.mobile-menu-content {
+  @apply flex flex-col items-start w-full p-6 overflow-y-auto flex-grow;
+}
+*/
+ 
 /* --- Sale Banner Section --- */
 .sale-banner {
   @apply my-12;
@@ -266,3 +317,65 @@ body {
 .footer-copyright {
   @apply mt-12 pt-8 border-t border-primary/20 text-center text-gray-500 text-sm;
 }
+
+/* --- Brands Scroller Section --- */
+.brands-scroller {
+  /* Use negative margins to allow logos to scroll into the faded edges */
+  @apply w-full inline-flex flex-nowrap -mx-4 sm:mx-0;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.brands-scroller-inner {
+  @apply flex items-center justify-center md:justify-start;
+  /* Slow down animation for a smoother effect */
+  animation: scroll-brands 60s linear infinite;
+}
+
+.brand-logo {
+  /* Reduce logo size on mobile */
+  @apply h-16 w-36 md:h-24 md:w-48 flex items-center justify-center p-2 md:p-4 mx-2 md:mx-4;
+  filter: grayscale(100%) opacity(60%);
+  transition: all 0.3s ease-in-out;
+}
+
+.brand-logo:hover {
+  filter: grayscale(0%) opacity(100%);
+  transform: scale(1.1);
+}
+
+@keyframes scroll-brands {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* --- Custom Dropdown Component Styles --- */
+.custom-select-button {
+  @apply relative w-full cursor-default rounded-md border border-primary/50 bg-gray-800/50 py-2 pl-3 pr-10 text-left text-white shadow-sm;
+  @apply hover:border-accent focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent;
+}
+
+.custom-select-options {
+  @apply absolute mt-1 max-h-60 w-full overflow-auto rounded-md py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm;
+  /* Themed background with backdrop blur */
+  background-color: rgba(10, 10, 20, 0.8); /* Dark semi-transparent background from your theme */
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* --- End Custom Dropdown --- */
+
+/* Add styles for the prose class used in product descriptions */
+@layer base {
+  .prose-invert a {
+    @apply text-accent hover:text-primary;
+  }
+}
+
+/* --- Checkout Page --- */
+.checkout-input {
+  /* Themed input fields with smooth transitions */
+  @apply block w-full rounded-md border-2 border-primary/30 bg-gray-900 px-4 py-2 shadow-sm text-white transition-all duration-200;
+  @apply focus:border-accent focus:ring-2 focus:ring-accent/50 focus:outline-none;
+}
+/* --- End Checkout Page --- */
