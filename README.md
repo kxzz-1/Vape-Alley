@@ -16,7 +16,7 @@ This project is built with a modern and efficient technology stack:
 
 ---
 ## Group Members:
-- Zeeshan Ahmed (FA23-BSE-200) — 0302 935640
+- Zeeshan Ahmed (FA23-BSE-200) — 0302 9356404
 - Hadi Muhammad (FA23-BSE-053)
 
 
