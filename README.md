@@ -1,22 +1,12 @@
-# Vape Alley E-Commerce Website
+# React + Vite
 
-Welcome to the official repository for the Vape Alley website, a modern, stylish, and fully responsive e-commerce platform.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-<img width="1839" height="864" alt="image" src="https://github.com/user-attachments/assets/7487b3b9-da69-4d63-a9ce-09f19418b935" />
+Currently, two official plugins are available:
 
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
----
+## Expanding the ESLint configuration
 
-## 🛠️ Technology Stack
-This project is built with a modern and efficient technology stack:
-
-- **Frontend:** React  
-- **Backend:** Next.js  
-- **Styling:** Tailwind CSS  
-
----
-## Group Members:
-- Zeeshan Ahmed (FA23-BSE-200) — 0302 9356404
-- Hadi Muhammad (FA23-BSE-053)
-
-
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
