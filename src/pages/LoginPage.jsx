@@ -88,13 +88,11 @@ const LoginPage = ({ handleLogin }) => {
               <div>
                 <a href="#" className="w-full inline-flex justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm bg-gray-800/50 text-sm font-medium text-gray-300 hover:bg-gray-800">
                   <img src="/google-tile.svg" alt="Google" className="h-5 w-5" loading="lazy" />
-                  Google
                 </a>
               </div>
               <div>
                 <a href="#" className="w-full inline-flex justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm bg-gray-800/50 text-sm font-medium text-gray-300 hover:bg-gray-800">
                   <img src="/facebook-tile.svg" alt="Facebook" className="h-5 w-5" loading="lazy" />
-                  Facebook
                 </a>
               </div>
             </div>

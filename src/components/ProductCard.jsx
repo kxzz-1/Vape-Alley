@@ -18,8 +18,8 @@ const ProductCard = ({ product, addToCart }) => {
     <div className="group relative flex-shrink-0 flex w-full max-w-[12rem] sm:max-w-xs flex-col overflow-hidden rounded-lg border border-gray-800 bg-gray-900/50 shadow-md hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 scroll-snap-start">
       <Link to={`/product/${id}`} className="relative aspect-square overflow-hidden bg-gray-800 group-hover:opacity-75 block">
         {isImageLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
-            <div className="logo-pulse">
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-800 image-loading-pulse">
+            <div>
               <img src="/logo.png" alt="Loading..." className="w-16 h-16" />
             </div>
           </div>
@@ -27,7 +27,7 @@ const ProductCard = ({ product, addToCart }) => {
         <img
           src={image}
           alt={name}
-          className={`h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-105 ${isImageLoading ? 'opacity-0' : 'opacity-100'}`}
+          className={`h-full w-full object-cover object-center transition-opacity duration-500 group-hover:scale-105 ${isImageLoading ? 'opacity-0' : 'opacity-100'}`}
           onLoad={() => setIsImageLoading(false)}
           onError={() => setIsImageLoading(false)} // Handle cases where the image fails to load
         />

@@ -73,6 +73,11 @@ function App() {
   // We need to wrap the login/logout logic in a component to use the `useNavigate` hook
   const AuthWrapper = () => {
     const navigate = useNavigate();
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, [pathname]);
 
     const handleLogin = (credentials) => {
       // In a real app, you'd validate this against a backend
