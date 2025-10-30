@@ -83,7 +83,7 @@ const ProductDetailsPage = ({ addToCart = () => {} }) => {
                 onClick={() => setActiveImage(img)}
                 className={`aspect-square rounded-lg overflow-hidden cursor-pointer border-2 ${activeImage === img ? 'border-accent' : 'border-transparent'}`}
               >
-                <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
               </div>
             ))}
           </div>

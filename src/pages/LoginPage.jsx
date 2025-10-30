@@ -45,7 +45,6 @@ const LoginPage = ({ handleLogin }) => {
               autoComplete="email" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              icon={EnvelopeIcon}
             />
             <FormInput 
               label="Password" 
@@ -55,7 +54,6 @@ const LoginPage = ({ handleLogin }) => {
               autoComplete="current-password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              icon={LockClosedIcon}
             />
 
             <div className="flex items-center justify-between">
@@ -87,8 +85,18 @@ const LoginPage = ({ handleLogin }) => {
             </div>
 
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div><a href="#" className="social-login-button"><img src="/google-logo.svg" alt="Google" className="h-5 w-5" /> Google</a></div>
-              <div><a href="#" className="social-login-button"><img src="/facebook-logo.svg" alt="Facebook" className="h-5 w-5" /> Facebook</a></div>
+              <div>
+                <a href="#" className="w-full inline-flex justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm bg-gray-800/50 text-sm font-medium text-gray-300 hover:bg-gray-800">
+                  <img src="/google-tile.svg" alt="Google" className="h-5 w-5" loading="lazy" />
+                  Google
+                </a>
+              </div>
+              <div>
+                <a href="#" className="w-full inline-flex justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm bg-gray-800/50 text-sm font-medium text-gray-300 hover:bg-gray-800">
+                  <img src="/facebook-tile.svg" alt="Facebook" className="h-5 w-5" loading="lazy" />
+                  Facebook
+                </a>
+              </div>
             </div>
           </div>
         </div>

@@ -117,6 +117,17 @@ body {
   @apply bg-primary text-white;
 }
 
+/* --- Main Carousel on Homepage --- */
+/* Ensure images in the main carousel are not cropped on mobile */
+.main-carousel-image { /* Mobile-first: prevent cropping on smaller screens */
+  @apply w-full h-full object-contain;
+}
+@screen md { /* From medium screens upwards: fill the container */
+  .main-carousel-image {
+    @apply object-cover;
+  }
+}
+
 /* --- Product Section --- */
 .products-section-container {
   @apply w-full mt-16;
@@ -165,14 +176,18 @@ body {
 
 /* Horizontal Scrolling Grid */
 .products-horizontal-scroll {
-  /* Centered the cards and balanced the padding */
-  @apply flex justify-center overflow-x-auto pt-8 gap-6 px-4 sm:px-6 transition-opacity duration-200;
+  /* Ensure items start cleanly and allow horizontal scrolling */
+  @apply flex overflow-x-auto pt-8 gap-6 px-4 sm:px-6 transition-opacity duration-200;
   /* Hide scrollbar for a cleaner look */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
   /* Enable snapping for a carousel-like feel */
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth; /* Ensures smooth programmatic scrolling */
+}
+
+.products-horizontal-scroll > * {
+  scroll-snap-align: start; /* Make each direct child snap to the start */
 }
 
 .products-horizontal-scroll::-webkit-scrollbar {

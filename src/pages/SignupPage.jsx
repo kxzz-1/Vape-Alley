@@ -53,10 +53,10 @@ const SignupPage = () => {
         <div className="bg-gray-900/50 py-8 px-4 shadow-lg rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && <p className="text-center text-red-400 bg-red-500/10 py-2 rounded-md">{error}</p>}
-            <FormInput label="Full Name" id="name" type="text" placeholder="Your Name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} icon={UserIcon} />
-            <FormInput label="Email address" id="email" type="email" placeholder="you@example.com" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} icon={EnvelopeIcon} />
-            <FormInput label="Password" id="password" type="password" placeholder="Create a Password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} icon={LockClosedIcon} />
-            <FormInput label="Confirm Password" id="confirm-password" type="password" placeholder="Confirm Your Password" autoComplete="new-password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} icon={LockClosedIcon} />
+            <FormInput label="Full Name" id="name" type="text" placeholder="Your Name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
+            <FormInput label="Email address" id="email" type="email" placeholder="you@example.com" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <FormInput label="Password" id="password" type="password" placeholder="Create a Password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <FormInput label="Confirm Password" id="confirm-password" type="password" placeholder="Confirm Your Password" autoComplete="new-password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
 
             <div>
               <button
@@ -79,8 +79,18 @@ const SignupPage = () => {
             </div>
 
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div><a href="#" className="social-login-button"><img src="/google-logo.svg" alt="Google" className="h-5 w-5" /> Google</a></div>
-              <div><a href="#" className="social-login-button"><img src="/facebook-logo.svg" alt="Facebook" className="h-5 w-5" /> Facebook</a></div>
+              <div>
+                <a href="#" className="w-full inline-flex justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm bg-gray-800/50 text-sm font-medium text-gray-300 hover:bg-gray-800">
+                  <img src="/google-tile.svg" alt="Google" className="h-5 w-5 mr-2" loading="lazy" />
+                    Google
+                </a>
+              </div>
+              <div>
+                <a href="#" className="w-full inline-flex justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm bg-gray-800/50 text-sm font-medium text-gray-300 hover:bg-gray-800">
+                  <img src="/facebook-tile.svg" alt="Facebook" className="h-5 w-5 mr-2" loading="lazy" />
+                    Facebook
+                </a>
+              </div>
             </div>
           </div>
         </div>
