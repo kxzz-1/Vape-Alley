@@ -8,7 +8,7 @@ import MegaMenu from './MegaMenu'; // Import the new MegaMenu component
 const devicesMenu = [
     {
         title: 'Mods',
-        image: '/carousel1.jpg',
+        image: '/mod-banner.webp',
         links: [ // Example links, can be more specific
             { name: 'VooPoo', href: '/products/devices' },
             { name: 'Vaporesso', href: '/products/devices' },
@@ -17,7 +17,7 @@ const devicesMenu = [
     },
     {
         title: 'Pods',
-        image: '/carousel2.jpg',
+        image: '/pod-banner.webp',
         links: [ // Example links
             { name: 'Oxva', href: '/products/devices' },
             { name: 'Geek Vape', href: '/products/devices' },
@@ -29,7 +29,7 @@ const devicesMenu = [
 const eJuiceMenu = [
     {
         title: 'Freebase',
-        image: '/carousel3.jpg',
+        image: '/freebase.webp',
         links: [ // Example links
             { name: 'Fruity Flavors', href: '/products/e-juices' },
             { name: 'Dessert Flavors', href: '/products/e-juices' },
@@ -38,7 +38,7 @@ const eJuiceMenu = [
     },
     {
         title: 'Nic Salts',
-        image: 'https://via.placeholder.com/400x400/8e008e/000000?text=Vape4',
+        image: '/nicsalt.webp',
         links: [ // Example links
             { name: 'High Nicotine', href: '/products/e-juices' },
             { name: 'Smooth Blends', href: '/products/e-juices' },
@@ -56,37 +56,19 @@ const disposablesMenu = [
             { name: '3000-6000 Puffs', href: '/products/disposables' },
             { name: '6000+ Puffs', href: '/products/disposables' },
         ],
-    },
-    {
-        title: 'Popular Brands',
-        image: 'https://via.placeholder.com/400x400/ff6347/ffffff?text=Dispo',
-        links: [ // Example links
-            { name: 'Elf Bar', href: '/products/disposables' },
-            { name: 'Lost Mary', href: '/products/disposables' },
-            { name: 'Waka', href: '/products/disposables' },
-        ],
-    },
+    }
 ];
 
 const accessoriesMenu = [
     {
         title: 'Coils & Tanks',
-        image: '/coil.jpg',
+        image: '/accessories.webp',
         links: [ // Example links
             { name: 'Replacement Coils', href: '/products/accessories' },
             { name: 'Sub-Ohm Tanks', href: '/products/accessories' },
             { name: 'RDA / RTA', href: '/products/accessories' },
         ],
-    },
-    {
-        title: 'Other Gear',
-        image: 'https://via.placeholder.com/400x400/4682b4/ffffff?text=Gear',
-        links: [ // Example links
-            { name: 'Batteries & Chargers', href: '/products/accessories' },
-            { name: 'Drip Tips', href: '/products/accessories' },
-            { name: 'Cases & Lanyards', href: '/products/accessories' },
-        ],
-    },
+    }
 ];
 
 // --- Mobile Accordion Item Component ---
