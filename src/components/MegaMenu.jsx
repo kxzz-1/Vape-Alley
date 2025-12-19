@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
+import { Link } from 'react-router-dom';
 
-const MegaMenu = ({ title, sections }) => {
+const MegaMenu = ({ title, items }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -10,35 +11,30 @@ const MegaMenu = ({ title, sections }) => {
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      <a href="#" className="flex items-center gap-x-1 whitespace-nowrap">
+      <button className="flex items-center gap-x-1 whitespace-nowrap">
         {title}
         <ChevronDownIcon
           className={`h-4 w-4 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
           aria-hidden="true"
         />
-      </a>
+      </button>
       {isOpen && (
         <div className="mega-menu-container">
           <div className="mega-menu">
-            <div className="mega-menu-content">
-              {sections.map((section) => (
-                <div key={section.title} className="mega-menu-section">
-                  <div className="mega-menu-image-container">
-                      <img src={section.image} alt={section.title} className="mega-menu-image" />
+            <div className="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+              {items && items.map((item) => (
+                <Link key={item.name} to={item.href} className="flex items-center gap-3 group p-2 hover:bg-white/5 rounded-lg transition-colors">
+                  <div className="h-8 w-8 bg-white rounded-full p-0.5 flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                    {item.image ? (
+                      <img src={item.image} alt={item.name} className="h-full w-full object-contain" />
+                    ) : (
+                      <span className="text-gray-800 font-bold text-xs">{item.name.charAt(0)}</span>
+                    )}
                   </div>
-                  <div>
-                    <h3 className="mega-menu-heading">{section.title}</h3>
-                    <ul className="mega-menu-links">
-                      {section.links.map((link) => (
-                        <li key={link.name}>
-                          <a href={link.href} className="mega-menu-link">
-                            {link.name}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+                  <span className="text-sm text-gray-300 group-hover:text-accent font-medium truncate">
+                    {item.name}
+                  </span>
+                </Link>
               ))}
             </div>
           </div>

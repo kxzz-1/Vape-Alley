@@ -3,7 +3,7 @@ import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
 const CustomDropdown = ({ options, selected, setSelected }) => {
-  const selectedOption = options.find(o => o.value === selected);
+  const selectedOption = options.find(o => o.value === selected) || options[0] || { label: 'Select', value: '' };
 
   return (
     <Listbox value={selected} onChange={setSelected}>
@@ -23,7 +23,7 @@ const CustomDropdown = ({ options, selected, setSelected }) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Listbox.Options className="custom-select-options">
+          <Listbox.Options className="custom-select-options absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-gray-700 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
             {options.map((option) => (
               <Listbox.Option
                 key={option.value}

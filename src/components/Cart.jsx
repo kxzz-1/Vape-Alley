@@ -5,7 +5,10 @@ import { XMarkIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 const Cart = ({ isOpen, onClose, cartItems = [], onRemove, onUpdateQuantity }) => {
   // Calculate the subtotal
-  const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const subtotal = cartItems.reduce((total, item) => {
+    const price = item.salePrice ? item.salePrice : item.price;
+    return total + price * item.quantity;
+  }, 0);
   const formatPrice = (num) => `Rs ${num.toLocaleString()}`;
 
   return (
@@ -73,8 +76,8 @@ const Cart = ({ isOpen, onClose, cartItems = [], onRemove, onUpdateQuantity }) =
                                   <div className="ml-4 flex flex-1 flex-col">
                                     <div>
                                       <div className="flex justify-between text-base font-medium text-gray-200">
-                                        <h3><Link to={`/product/${item.product_id}`} onClick={onClose}>{item.name}</Link></h3>
-                                        <p className="ml-4">{formatPrice(item.price * item.quantity)}</p>
+                                        <h3><Link to={`/product/${item.id}`} onClick={onClose}>{item.name}</Link></h3>
+                                        <p className="ml-4">{formatPrice((item.salePrice || item.price) * item.quantity)}</p>
                                       </div>
                                     </div>
                                     <div className="flex flex-1 items-end justify-between text-sm">

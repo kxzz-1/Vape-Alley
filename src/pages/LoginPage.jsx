@@ -6,13 +6,18 @@ import FormInput from '../components/FormInput';
 const LoginPage = ({ handleLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     // In a real app, you'd have more robust validation and API calls
     if (email && password) {
-      handleLogin({ email, password });
+      const result = await handleLogin({ email, password });
+      if (result && !result.success) {
+        setError(result.message);
+      }
     }
   };
 
@@ -38,6 +43,7 @@ const LoginPage = ({ handleLogin }) => {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-gray-900/50 py-8 px-4 shadow-lg rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {error && <p className="text-center text-red-400 bg-red-500/10 py-2 rounded-md">{error}</p>}
             <FormInput 
               label="Email address" 
               id="email" type="email" 

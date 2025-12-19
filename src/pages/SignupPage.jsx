@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { UserIcon, EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/solid';
 import FormInput from '../components/FormInput';
 
-const SignupPage = () => {
+const SignupPage = ({ handleSignup }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,7 +11,7 @@ const SignupPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -20,11 +20,11 @@ const SignupPage = () => {
       return;
     }
 
-    // In a real app, you'd validate passwords match and call a signup API
     if (password === confirmPassword) {
-      console.log('Signing up with:', { name, email, password });
-      // Redirect to login page after successful signup
-      navigate('/login');
+      const result = await handleSignup({ name, email, password });
+      if (result && !result.success) {
+        setError(result.message);
+      }
     } else {
       setError("Passwords don't match!");
     }

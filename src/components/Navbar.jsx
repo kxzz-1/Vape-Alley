@@ -1,78 +1,11 @@
-import React, { useState, Fragment } from 'react';
-import { ShoppingCartIcon, MagnifyingGlassIcon, UserIcon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import React, { useState, useEffect, Fragment } from 'react';
+import { ShoppingCartIcon, MagnifyingGlassIcon, UserIcon, XMarkIcon, ChevronDownIcon, Squares2X2Icon } from '@heroicons/react/24/outline';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Dialog, Transition } from '@headlessui/react';
 import MegaMenu from './MegaMenu'; // Import the new MegaMenu component
 
-// --- Data for the new Mega Menus ---
-const devicesMenu = [
-    {
-        title: 'Mods',
-        image: '/mod-banner.webp',
-        links: [ // Example links, can be more specific
-            { name: 'VooPoo', href: '/products/devices' },
-            { name: 'Vaporesso', href: '/products/devices' },
-            { name: 'Smok', href: '/products/devices' },
-        ],
-    },
-    {
-        title: 'Pods',
-        image: '/pod-banner.webp',
-        links: [ // Example links
-            { name: 'Oxva', href: '/products/devices' },
-            { name: 'Geek Vape', href: '/products/devices' },
-            { name: 'Uwell', href: '/products/devices' },
-        ],
-    },
-];
-
-const eJuiceMenu = [
-    {
-        title: 'Freebase',
-        image: '/freebase.webp',
-        links: [ // Example links
-            { name: 'Fruity Flavors', href: '/products/e-juices' },
-            { name: 'Dessert Flavors', href: '/products/e-juices' },
-            { name: 'Menthol', href: '/products/e-juices' },
-        ],
-    },
-    {
-        title: 'Nic Salts',
-        image: '/nicsalt.webp',
-        links: [ // Example links
-            { name: 'High Nicotine', href: '/products/e-juices' },
-            { name: 'Smooth Blends', href: '/products/e-juices' },
-            { name: 'Tobacco Flavors', href: '/products/e-juices' },
-        ],
-    },
-];
-
-const disposablesMenu = [
-    {
-        title: 'By Puff Count',
-        image: '/disposable.png',
-        links: [ // Example links
-            { name: 'Up to 3000 Puffs', href: '/products/disposables' },
-            { name: '3000-6000 Puffs', href: '/products/disposables' },
-            { name: '6000+ Puffs', href: '/products/disposables' },
-        ],
-    }
-];
-
-const accessoriesMenu = [
-    {
-        title: 'Coils & Tanks',
-        image: '/accessories.webp',
-        links: [ // Example links
-            { name: 'Replacement Coils', href: '/products/accessories' },
-            { name: 'Sub-Ohm Tanks', href: '/products/accessories' },
-            { name: 'RDA / RTA', href: '/products/accessories' },
-        ],
-    }
-];
-
 // --- Mobile Accordion Item Component ---
-const AccordionItem = ({ title, sections, closeMenu }) => {
+const AccordionItem = ({ title, items, closeMenu }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -86,18 +19,20 @@ const AccordionItem = ({ title, sections, closeMenu }) => {
       </button>
       {isOpen && (
         <div className="pl-4 pb-4 space-y-4">
-          {sections.map((section) => (
-            <div key={section.title}>
-              <h4 className="font-semibold text-white mb-2">{section.title}</h4>
-              <div className="flex flex-col space-y-2">
-                {section.links.map((link) => (
-                  <Link key={link.name} to={link.href} onClick={closeMenu} className="text-gray-300 hover:text-accent">
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
+          <div className="grid grid-cols-2 gap-4">
+            {items.map((item) => (
+              <Link key={item.name} to={item.href} onClick={closeMenu} className="flex items-center gap-3 group">
+                <div className="h-8 w-8 bg-white rounded-full p-0.5 flex items-center justify-center">
+                  {item.image ? (
+                    <img src={item.image} alt={item.name} className="h-full w-full object-contain" />
+                  ) : (
+                    <span className="text-gray-800 font-bold text-xs">{item.name.charAt(0)}</span>
+                  )}
+                </div>
+                <span className="text-gray-300 group-hover:text-accent text-sm">{item.name}</span>
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -106,7 +41,50 @@ const AccordionItem = ({ title, sections, closeMenu }) => {
 
 const Navbar = ({ user, onCartClick, isMobileMenuOpen, setMobileMenuOpen }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [brandMenus, setBrandMenus] = useState({
+    devices: [],
+    eJuice: [],
+    disposables: [],
+    accessories: []
+  });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/brands');
+        if (response.ok) {
+          const brands = await response.json();
+          const newMenus = { devices: [], eJuice: [], disposables: [], accessories: [] };
+
+          brands.forEach(brand => {
+            const brandItem = {
+              name: brand.name,
+              image: brand.image,
+              href: `/search?q=${encodeURIComponent(brand.name)}`
+            };
+
+            brand.categories.forEach(cat => {
+              const catName = cat.name.toLowerCase();
+              if (catName.includes('device') || catName.includes('mod') || catName.includes('pod') || catName.includes('vape')) {
+                newMenus.devices.push(brandItem);
+              } else if (catName.includes('juice') || catName.includes('liquid')) {
+                newMenus.eJuice.push(brandItem);
+              } else if (catName.includes('disposable')) {
+                newMenus.disposables.push(brandItem);
+              } else if (catName.includes('access') || catName.includes('coil') || catName.includes('tank')) {
+                newMenus.accessories.push(brandItem);
+              }
+            });
+          });
+          setBrandMenus(newMenus);
+        }
+      } catch (error) {
+        console.error("Failed to fetch brands for menu", error);
+      }
+    };
+    fetchBrands();
+  }, []);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -132,10 +110,10 @@ const Navbar = ({ user, onCartClick, isMobileMenuOpen, setMobileMenuOpen }) => {
         <div className="hidden md:flex flex-1 justify-center">
           <ul className="nav-links">
             <li><Link to="/">Home</Link></li>
-            <MegaMenu title="Devices" sections={devicesMenu} />
-            <MegaMenu title="E-Juice" sections={eJuiceMenu} />
-            <MegaMenu title="Disposables" sections={disposablesMenu} />
-            <MegaMenu title="Accessories" sections={accessoriesMenu} />
+            <MegaMenu title="Devices" items={brandMenus.devices} />
+            <MegaMenu title="E-Juice" items={brandMenus.eJuice} />
+            <MegaMenu title="Disposables" items={brandMenus.disposables} />
+            <MegaMenu title="Accessories" items={brandMenus.accessories} />
           </ul>
         </div>
 
@@ -156,6 +134,9 @@ const Navbar = ({ user, onCartClick, isMobileMenuOpen, setMobileMenuOpen }) => {
           <button type="button" onClick={onCartClick} aria-label="Open Shopping Cart" className="icon-button">
             <ShoppingCartIcon className="h-6 w-6" />
           </button>
+          <Link to="/admin" aria-label="Admin Panel" className="icon-button">
+            <Squares2X2Icon className="h-6 w-6" />
+          </Link>
           <Link to={user ? "/account" : "/login"} aria-label="My Account" className="icon-button">
             <UserIcon className="h-6 w-6" />
           </Link> 
@@ -233,10 +214,11 @@ const Navbar = ({ user, onCartClick, isMobileMenuOpen, setMobileMenuOpen }) => {
 
                   <div className="space-y-6 border-t border-primary/20 pt-6">
                   <Link to="/" onClick={() => setMobileMenuOpen(false)} className="w-full py-2 text-lg text-accent hover:text-white">Home</Link>
-                  <AccordionItem title="Devices" sections={devicesMenu} closeMenu={() => setMobileMenuOpen(false)} />
-                  <AccordionItem title="E-Juice" sections={eJuiceMenu} closeMenu={() => setMobileMenuOpen(false)} />
-                  <AccordionItem title="Disposables" sections={disposablesMenu} closeMenu={() => setMobileMenuOpen(false)} />
-                  <AccordionItem title="Accessories" sections={accessoriesMenu} closeMenu={() => setMobileMenuOpen(false)} />
+                  <AccordionItem title="Devices" items={brandMenus.devices} closeMenu={() => setMobileMenuOpen(false)} />
+                  <AccordionItem title="E-Juice" items={brandMenus.eJuice} closeMenu={() => setMobileMenuOpen(false)} />
+                  <AccordionItem title="Disposables" items={brandMenus.disposables} closeMenu={() => setMobileMenuOpen(false)} />
+                  <AccordionItem title="Accessories" items={brandMenus.accessories} closeMenu={() => setMobileMenuOpen(false)} />
+                  <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="w-full py-2 text-lg text-accent hover:text-white flex items-center gap-2"><Squares2X2Icon className="h-5 w-5" /> Admin Panel</Link>
                     </div>
                 </div>
 

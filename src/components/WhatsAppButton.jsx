@@ -5,7 +5,7 @@ const WhatsAppButton = ({ isOverlayOpen }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
 
-  const phoneNumber = '+923029356404';
+  const phoneNumber = '+923097320061';
   const defaultMessage = "Hello! I'm interested in your products and have a question.";
 
   const toggleChat = () => {

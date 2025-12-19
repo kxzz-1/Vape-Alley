@@ -1,27 +1,83 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { LockClosedIcon, TrashIcon } from '@heroicons/react/24/solid';
-
-// Re-using sample data for demonstration. In a real app, this would come from a cart context.
+import { Link, useNavigate } from 'react-router-dom';
+import { LockClosedIcon, TrashIcon, BanknotesIcon } from '@heroicons/react/24/solid';
 
 const formatPrice = (num) => `Rs ${num.toLocaleString()}`;
 
-const CheckoutPage = ({ cartItems = [], onRemove }) => {
+const CheckoutPage = ({ cartItems = [], onRemove, onClearCart }) => {
+  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formState, setFormState] = useState({
     email: '',
     'full-name': '',
+    phone: '',
     address: '',
     city: '',
     'postal-code': '',
   });
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = cartItems.reduce((sum, item) => {
+    const price = item.salePrice ? item.salePrice : item.price;
+    return sum + price * item.quantity;
+  }, 0);
   const shipping = 250;
   const total = subtotal + shipping;
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormState(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handlePlaceOrder = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const orderData = {
+      customer: formState['full-name'],
+      email: formState.email,
+      phone: formState.phone,
+      address: formState.address,
+      city: formState.city,
+      postalCode: formState['postal-code'],
+      paymentMethod: 'COD',
+      items: cartItems.map(item => ({
+        productId: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.salePrice ? item.salePrice : item.price
+      })),
+      total: total
+    };
+
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/api/orders', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(orderData),
+      });
+
+      if (response.ok) {
+        onClearCart();
+        alert('Order placed successfully!');
+        navigate('/');
+      } else {
+        const errorData = await response.json();
+        alert(`Failed to place order: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error('Error placing order:', error);
+      alert('An error occurred while placing the order.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const FormInput = ({ label, id, type = 'text', placeholder, autoComplete, required = true, value, onChange }) => (
@@ -37,7 +93,7 @@ const CheckoutPage = ({ cartItems = [], onRemove }) => {
           required={required}
           value={value}
           onChange={onChange}
-          className="checkout-input"
+          className="mt-1 block w-full rounded-md border-gray-600 bg-gray-800 text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2 px-3"
         />
       </div>
     </div>
@@ -45,36 +101,64 @@ const CheckoutPage = ({ cartItems = [], onRemove }) => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-white tracking-tight">Checkout</h1>
-        <p className="mt-2 text-lg text-gray-400">Complete your purchase</p>
-      </div>
+      <h1 className="text-3xl font-bold text-white mb-8">Checkout</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-12">
-        {/* Shipping Information Form */}
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-2xl font-semibold text-accent">Contact Information</h2>
-            <FormInput label="Email address" id="email" type="email" placeholder="you@example.com" autoComplete="email" value={formState.email} onChange={handleInputChange} />
-          </div>
-
-          <div className="border-t border-primary/20 pt-6">
-            <h2 className="text-2xl font-semibold text-accent">Shipping Address</h2>
-            <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-              <div className="sm:col-span-2">
-                <FormInput label="Full name" id="full-name" placeholder="Your Name" autoComplete="name" value={formState['full-name']} onChange={handleInputChange} />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Left Column: Forms */}
+        <div className="lg:col-span-7 space-y-8">
+          <form id="checkout-form" onSubmit={handlePlaceOrder}>
+            {/* Contact Info */}
+            <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-800">
+              <h2 className="text-xl font-semibold text-white mb-4">Contact Information</h2>
+              <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                <div className="sm:col-span-2">
+                  <FormInput label="Email address" id="email" type="email" placeholder="you@example.com" autoComplete="email" value={formState.email} onChange={handleInputChange} />
+                </div>
+                <div className="sm:col-span-2">
+                  <FormInput label="Phone Number" id="phone" type="tel" placeholder="+92 300 1234567" autoComplete="tel" value={formState.phone} onChange={handleInputChange} />
+                </div>
               </div>
-              <div className="sm:col-span-2">
-                <FormInput label="Address" id="address" placeholder="1234 Main St" autoComplete="street-address" value={formState.address} onChange={handleInputChange} />
-              </div>
-              <FormInput label="City" id="city" placeholder="Lahore" autoComplete="address-level2" value={formState.city} onChange={handleInputChange} />
-              <FormInput label="Postal code" id="postal-code" placeholder="54000" autoComplete="postal-code" value={formState['postal-code']} onChange={handleInputChange} />
             </div>
-          </div>
+
+            {/* Shipping Address */}
+            <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-800 mt-6">
+              <h2 className="text-xl font-semibold text-white mb-4">Shipping Address</h2>
+              <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                <div className="sm:col-span-2">
+                  <FormInput label="Full name" id="full-name" placeholder="Your Name" autoComplete="name" value={formState['full-name']} onChange={handleInputChange} />
+                </div>
+                <div className="sm:col-span-2">
+                  <FormInput label="Address" id="address" placeholder="1234 Main St" autoComplete="street-address" value={formState.address} onChange={handleInputChange} />
+                </div>
+                <FormInput label="City" id="city" placeholder="Lahore" autoComplete="address-level2" value={formState.city} onChange={handleInputChange} />
+                <FormInput label="Postal code" id="postal-code" placeholder="54000" autoComplete="postal-code" value={formState['postal-code']} onChange={handleInputChange} />
+              </div>
+            </div>
+
+            {/* Payment Method */}
+            <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-800 mt-6">
+              <h2 className="text-xl font-semibold text-white mb-4">Payment Method</h2>
+              <div className="space-y-4">
+                <div className="flex items-center p-4 border border-primary bg-primary/10 rounded-lg cursor-pointer">
+                  <input
+                    id="cod"
+                    name="payment-method"
+                    type="radio"
+                    defaultChecked
+                    className="h-4 w-4 border-gray-300 text-primary focus:ring-primary"
+                  />
+                  <label htmlFor="cod" className="ml-3 block text-sm font-medium text-white flex-1 flex items-center gap-2">
+                    <BanknotesIcon className="h-5 w-5 text-accent" />
+                    Cash on Delivery (COD)
+                  </label>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
 
-        {/* Order Summary */}
-        <div className="bg-gray-900/50 p-6 rounded-xl shadow-lg self-start">
+        {/* Right Column: Order Summary */}
+        <div className="lg:col-span-5 bg-gray-900/50 p-6 rounded-xl border border-gray-800 h-fit sticky top-24">
           <h2 className="text-2xl font-semibold text-accent border-b border-primary/20 pb-4">Order Summary</h2>
           <ul role="list" className="divide-y divide-primary/20 my-6">
             {cartItems.map((product) => (
@@ -86,12 +170,15 @@ const CheckoutPage = ({ cartItems = [], onRemove }) => {
                   <div>
                     <div className="flex justify-between text-base font-medium text-white">
                       <h3>{product.name}</h3>
-                      <p className="ml-4">{formatPrice(product.price * product.quantity)}</p>
+                      <p className="ml-4">{formatPrice((product.salePrice || product.price) * product.quantity)}</p>
                     </div>
                     {product.variant && (
                       <p className="mt-1 text-sm text-gray-400">
                         {Object.entries(product.variant).map(([key, value]) => `${key}: ${value}`).join(', ')}
                       </p>
+                    )}
+                    {product.selectedColor && (
+                      <p className="mt-1 text-sm text-gray-400">Color: {product.selectedColor}</p>
                     )}
                   </div>
                   <div className="flex flex-1 items-end justify-between text-sm">
@@ -125,10 +212,12 @@ const CheckoutPage = ({ cartItems = [], onRemove }) => {
           <div className="mt-8">
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-x-3 py-3 rounded-full bg-primary hover:bg-primary-hover transition-colors text-white font-bold text-lg"
+              form="checkout-form"
+              disabled={isSubmitting || cartItems.length === 0}
+              className="w-full flex items-center justify-center gap-x-3 py-3 rounded-full bg-primary hover:bg-primary-hover transition-colors text-white font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <LockClosedIcon className="h-6 w-6" />
-              Place Order
+              {isSubmitting ? 'Processing...' : 'Place Order'}
             </button>
           </div>
         </div>

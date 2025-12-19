@@ -1,39 +1,26 @@
-import React from 'react';
-
-const brands = [
-  {
-    name: 'VooPoo',
-    logo: '/voopoo-logo.png',
-  },
-  {
-    name: 'Vaporesso',
-    logo: '/vaporesso-logo.png',
-  },
-  {
-    name: 'Smok',
-    logo: '/smok-logo.png',
-  },
-  {
-    name: 'Uwell',
-    logo: '/uwell-logo.png',
-  },
-  {
-    name: 'Geek Vape',
-    logo: '/GeekVape-Logo.png',
-  },
-  {
-    name: 'Oxva',
-    logo: '/oxva-logo.png',
-  },
-  {
-    name: 'Tokyo',
-    logo: '/tokyo-logo.png',
-  },
-];
+import React, { useState, useEffect } from 'react';
 
 const BrandsSection = () => {
+  const [brands, setBrands] = useState([]);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/brands');
+        if (response.ok) {
+          const data = await response.json();
+          // Filter for brands that have an image to display
+          setBrands(data.filter(brand => brand.image));
+        }
+      } catch (error) {
+        console.error("Error fetching brands:", error);
+      }
+    };
+    fetchBrands();
+  }, []);
+
   // Duplicate the brands array to create a seamless loop effect
-  const extendedBrands = [...brands, ...brands];
+  const extendedBrands = brands.length > 0 ? [...brands, ...brands] : [];
 
   return (
     <div className="w-full mt-16 overflow-hidden">
@@ -42,7 +29,7 @@ const BrandsSection = () => {
         <div className="brands-scroller-inner">
           {extendedBrands.map((brand, index) => (
             <div key={`${brand.name}-${index}`} className="brand-logo">
-              <img src={brand.logo} alt={brand.name} className="h-20 w-auto object-contain" />
+              <img src={brand.image} alt={brand.name} className="h-20 w-auto object-contain" />
             </div>
           ))}
         </div>

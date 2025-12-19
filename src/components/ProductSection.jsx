@@ -3,16 +3,49 @@ import ProductCard from './ProductCard';
 import { Link } from 'react-router-dom';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 
-import { allProducts, categories as productCategories } from '../../productData.js';
-const categories = productCategories.filter(c => c !== 'All');
-
 const ProductsSection = ({ addToCart }) => {
   const [activeCategory, setActiveCategory] = useState('Devices');
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [isFading, setIsFading] = useState(false);
   const [arrowStyle, setArrowStyle] = useState({});
   const [isHovering, setIsHovering] = useState(false);
   const tabsRef = useRef(null);
   const scrollContainerRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [productsRes, categoriesRes] = await Promise.all([
+          fetch('http://localhost:3000/api/products'),
+          fetch('http://localhost:3000/api/categories')
+        ]);
+
+        let fetchedCategories = [];
+        if (categoriesRes.ok) {
+          const categoriesData = await categoriesRes.json();
+          fetchedCategories = categoriesData.map(c => c.name);
+        }
+
+        if (productsRes.ok) {
+          const productsData = await productsRes.json();
+          setProducts(productsData);
+
+          // Fallback: if no categories in DB, extract from products to ensure tabs show up
+          if (fetchedCategories.length === 0 && productsData.length > 0) {
+            fetchedCategories = [...new Set(productsData.map(p => p.category))];
+          }
+        }
+        setCategories(fetchedCategories);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleCategoryChange = useCallback((category) => {
     if (category === activeCategory) return;
@@ -25,7 +58,7 @@ const ProductsSection = ({ addToCart }) => {
     }, 200); // This duration should match the CSS transition duration
   }, [activeCategory]);
 
-  const displayedProducts = allProducts.filter(p => p.category === activeCategory);
+  const displayedProducts = products.filter(p => p.category === activeCategory);
 
   // --- Effect for positioning the tab arrow ---
   // This effect calculates the position for the pointer arrow
@@ -74,6 +107,13 @@ const ProductsSection = ({ addToCart }) => {
     return () => clearInterval(interval);
   }, [activeCategory, isHovering, scrollNext]);
 
+  if (isLoading) {
+    return (
+      <div className="products-section-container flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="products-section-container">
