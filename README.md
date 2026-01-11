@@ -10,3 +10,12 @@ Currently, two official plugins are available:
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+
+## How to run the project:
+- open the project in vscode
+- enter command in terminal: "npm install" to install all dependencies
+- enter command in terminal: "npm run dev"
+- this will run the front end
+- now open an integrated terminal for vapealley-backend folder and enter command in that terminal: "npm start"
+- this will start the backend
